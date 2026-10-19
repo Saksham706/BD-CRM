@@ -1,0 +1,23 @@
+export const PERMISSIONS = [
+  { key: "dashboard.view", module: "dashboard", action: "view", description: "View dashboard" },
+  { key: "leads.view", module: "leads", action: "view", description: "View permitted leads" },
+  { key: "leads.create", module: "leads", action: "create", description: "Create leads" },
+  { key: "leads.edit", module: "leads", action: "edit", description: "Edit permitted leads" },
+  { key: "leads.delete", module: "leads", action: "delete", description: "Delete/archive permitted leads" },
+  { key: "leads.assign", module: "leads", action: "assign", description: "Assign or reassign leads" },
+  { key: "leads.export", module: "leads", action: "export", description: "Export permitted lead data" },
+  { key: "followups.view", module: "followups", action: "view", description: "View permitted follow-ups" },
+  { key: "followups.create", module: "followups", action: "create", description: "Create follow-ups" },
+  { key: "followups.edit", module: "followups", action: "edit", description: "Edit or complete follow-ups" },
+  { key: "reports.view", module: "reports", action: "view", description: "View permitted reports" },
+  { key: "reports.export", module: "reports", action: "export", description: "Export permitted reports" },
+  { key: "users.view", module: "users", action: "view", description: "View user accounts" },
+  { key: "users.create", module: "users", action: "create", description: "Create user accounts" },
+  { key: "users.edit", module: "users", action: "edit", description: "Edit user accounts" },
+  { key: "users.approve", module: "users", action: "approve", description: "Approve or reject registrations" },
+  { key: "users.permissions", module: "users", action: "permissions", description: "Manage user permissions" },
+  { key: "users.deactivate", module: "users", action: "deactivate", description: "Activate or deactivate accounts" },
+  { key: "settings.view", module: "settings", action: "view", description: "View system settings" },
+  { key: "settings.edit", module: "settings", action: "edit", description: "Change system settings" },
+  { key: "audit.view", module: "audit", action: "view", description: "View audit logs" }
+];
