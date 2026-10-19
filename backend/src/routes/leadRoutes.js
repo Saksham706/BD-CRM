@@ -1,0 +1,16 @@
+import { Router } from "express";
+import { authenticate } from "../middleware/authenticate.js";
+import { requirePermission } from "../middleware/requirePermission.js";
+import * as controller from "../controllers/leadController.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { createLeadSchema, updateLeadSchema, assignLeadSchema, noteSchema } from "../validators/leadValidator.js";
+const router = Router();
+router.use(authenticate);
+router.get("/", requirePermission("leads.view"), controller.list);
+router.post("/", requirePermission("leads.create"), validateRequest(createLeadSchema), controller.create);
+router.get("/:id", requirePermission("leads.view"), controller.details);
+router.patch("/:id", requirePermission("leads.edit"), validateRequest(updateLeadSchema), controller.update);
+router.post("/:id/assign", requirePermission("leads.assign"), validateRequest(assignLeadSchema), controller.assign);
+router.post("/:id/notes", requirePermission("leads.edit"), validateRequest(noteSchema), controller.addNote);
+router.delete("/:id", requirePermission("leads.delete"), controller.archive);
+export default router;

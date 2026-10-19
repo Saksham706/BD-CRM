@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { authenticate } from "../middleware/authenticate.js";
+import { requirePermission } from "../middleware/requirePermission.js";
+import * as c from "../controllers/leadFieldController.js";
+const r = Router();
+r.use(authenticate);
+r.get("/", requirePermission("leads.view"), c.list);
+r.post("/", requirePermission("settings.edit"), c.create);
+r.patch("/:id", requirePermission("settings.edit"), c.update);
+export default r;

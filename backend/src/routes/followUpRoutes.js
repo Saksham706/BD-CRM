@@ -1,0 +1,14 @@
+import { Router } from "express";
+import { authenticate } from "../middleware/authenticate.js";
+import { requirePermission } from "../middleware/requirePermission.js";
+import * as controller from "../controllers/followupController.js";
+import { validateRequest } from "../middleware/validateRequest.js";
+import { createFollowupSchema, completeFollowupSchema, rescheduleFollowupSchema, cancelFollowupSchema } from "../validators/followupValidator.js";
+const router = Router();
+router.use(authenticate);
+router.get("/", requirePermission("followups.view"), controller.list);
+router.post("/", requirePermission("followups.create"), validateRequest(createFollowupSchema), controller.create);
+router.post("/:id/complete", requirePermission("followups.edit"), validateRequest(completeFollowupSchema), controller.complete);
+router.post("/:id/reschedule", requirePermission("followups.edit"), validateRequest(rescheduleFollowupSchema), controller.reschedule);
+router.post("/:id/cancel", requirePermission("followups.edit"), validateRequest(cancelFollowupSchema), controller.cancel);
+export default router;

@@ -17,8 +17,6 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: { type: Date, default: null }
 }, { timestamps: true, minimize: false });
 
-userSchema.index({ email: 1 }, { unique: true });
-userSchema.index({ loginId: 1 }, { unique: true });
 userSchema.index({ approvalStatus: 1, emailVerifiedAt: 1 });
 
 userSchema.virtual("isEmailVerified").get(function () {
