@@ -21,7 +21,7 @@ export const config = {
     .filter(Boolean),
   apiBaseUrl: process.env.API_BASE_URL || "http://localhost:5000",
   mongoUri:
-    process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/lead_management_crm",
+    process.env.MONGODB_URI,
   redisUrl: process.env.REDIS_URL || "",
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET || "",
   jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m",

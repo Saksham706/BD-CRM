@@ -1,30 +1,58 @@
 import http from "node:http";
-import { config, assertProductionConfig } from "./config/appConfig.js";
+
+import {
+  config,
+  assertProductionConfig,
+} from "./config/appConfig.js";
+
 import { connectDatabase } from "./config/database.js";
-import { connectRedis, closeRedis } from "./config/redis.js";
 
-let server;
+import {
+  connectRedis,
+  closeRedis,
+} from "./config/redis.js";
 
-async function start() {
-  assertProductionConfig();
-  await connectDatabase();
-  await connectRedis();
-  // Import after Redis connects so rate-limit middleware can select the Redis store.
-  const { default: app } = await import("./app.js");
-  server = http.createServer(app);
-  server.listen(config.port, () => console.log(`CRM API listening on port ${config.port}`));
+async function startServer() {
+  try {
+    console.log("🚀 Starting Lead Management CRM backend...");
+
+    // Validate environment configuration
+    assertProductionConfig();
+
+    // Connect MongoDB first
+    console.log("⏳ Connecting to MongoDB...");
+    await connectDatabase();
+
+    // Connect Redis second
+    console.log("⏳ Connecting to Redis...");
+    await connectRedis();
+
+    // Import Express app after successful connections
+    const { default: app } = await import("./app.js");
+
+    const server = http.createServer(app);
+
+    server.listen(config.port, () => {
+      console.log(
+        `✅ CRM API running on port ${config.port}`
+      );
+    });
+
+    // Graceful shutdown
+    process.on("SIGINT", async () => {
+      console.log("\nShutting down CRM backend...");
+
+      server.close();
+
+      await closeRedis();
+
+      process.exit(0);
+    });
+
+  } catch (error) {
+    console.error("❌ Backend startup failed:", error.message);
+    process.exit(1);
+  }
 }
 
-async function shutdown(signal) {
-  console.log(`${signal} received; shutting down...`);
-  if (server) server.close();
-  await closeRedis().catch(() => {});
-  process.exit(0);
-}
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT", () => shutdown("SIGINT"));
-
-start().catch((error) => {
-  console.error("Failed to start server:", error);
-  process.exit(1);
-});
+startServer();
